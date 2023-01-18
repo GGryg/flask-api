@@ -141,7 +141,19 @@ def delete_employee(tx, id, newManager):
 
 @app.route('/employees/<string:id>', methods=['DELETE'])
 def delete_employee_route(id):
-    pass
+    name = request.json['name']
+    lastName = request.json['lastName']
+    position = request.json['position']
+    department = request.json['department']
+    role = request.json['role']
+
+    with driver.session() as session:
+        isUpdated = session.execute_write(delete_employee, id, name, lastName, position, department, role)
+
+    if not isUpdated:
+        return jsonify('Employee not found'), 404
+
+    return jsonify('Employee has been deleted')
 
 if __name__ == '__main__':
     app.run()
